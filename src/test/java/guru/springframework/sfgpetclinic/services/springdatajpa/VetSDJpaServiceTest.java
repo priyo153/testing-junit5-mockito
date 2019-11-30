@@ -4,7 +4,7 @@ package guru.springframework.sfgpetclinic.services.springdatajpa;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -83,6 +84,15 @@ class VetSDJpaServiceTest {
 		vetService.deleteById(1L);
 		
 		verify(vet).deleteById(anyLong());
+	}
+	
+	@Test
+	void testDeleteByIdExcdeption() {
+	
+		doThrow(new RuntimeException("error")).when(vet).deleteById(anyLong());
+		
+		assertThrows(RuntimeException.class, ()-> vetService.deleteById(1L) );
+		verify(vet).deleteById(1L);
 	}
 
 }
